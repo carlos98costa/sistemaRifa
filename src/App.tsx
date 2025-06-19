@@ -1,4 +1,3 @@
-// src/App.tsx
 import { useState, useEffect } from 'react'
 import { Toaster, toast } from 'react-hot-toast'
 import Slider from 'react-slick'
@@ -19,11 +18,8 @@ function App() {
   const loadNumbers = async () => {
     try {
       const data = await api.getNumbers()
-      // Filtra para garantir que apenas números com uma propriedade 'number' válida sejam processados.
-      // Isso deve resolver o aviso de 'key' única.
       const validNumbers = data.filter(n => typeof n.number === 'number' && n.number !== null && !isNaN(n.number));
       setNumbers(validNumbers)
-      // Removidos os console.log de depuração para um console mais limpo.
     } catch (error) {
       toast.error('Erro ao carregar os números')
       console.error('Error loading numbers:', error)
@@ -44,16 +40,16 @@ function App() {
     cssEase: 'linear'
   }
 
-  const handleNumberClick = (raffleNumberValue: number) => { // Renomeado para clareza
-    const raffleNumber = numbers.find(n => n.number === raffleNumberValue) // Usa 'number'
+  const handleNumberClick = (raffleNumberValue: number) => {
+    const raffleNumber = numbers.find(n => n.number === raffleNumberValue)
     if (!raffleNumber?.isAvailable) {
       toast.error('Este número já foi vendido!')
       return
     }
 
     setSelectedNumbers(prev => {
-      if (prev.includes(raffleNumberValue)) { // Usa 'raffleNumberValue'
-        return prev.filter(n => n !== raffleNumberValue) // Usa 'raffleNumberValue'
+      if (prev.includes(raffleNumberValue)) {
+        return prev.filter(n => n !== raffleNumberValue)
       }
       return [...prev, raffleNumberValue]
     })
@@ -66,7 +62,6 @@ function App() {
     }
 
     try {
-      // Passa os selectedNumbers que são array de números (o 'number' da rifa)
       await api.purchaseNumbers(selectedNumbers, buyerName.trim(), password.trim())
       toast.success('Números comprados com sucesso!')
       setSelectedNumbers([])
@@ -75,7 +70,12 @@ function App() {
       loadNumbers()
     } catch (error) {
       if (error instanceof Error) {
-        toast.error(error.message)
+        // Verifica se a mensagem de erro é "Unauthorized" e exibe a mensagem personalizada
+        if (error.message === 'Unauthorized') {
+          toast.error('Senha incorreta, tente novamente!');
+        } else {
+          toast.error(error.message); // Para outros erros, exibe a mensagem padrão
+        }
       } else {
         toast.error('Erro ao comprar números')
       }
@@ -175,8 +175,8 @@ function App() {
           <div className="grid grid-cols-8 sm:grid-cols-10 md:grid-cols-12 lg:grid-cols-16 gap-2 mb-8">
             {numbers.map((number) => (
               <button
-                key={number.number} // Usa 'number' como chave
-                onClick={() => handleNumberClick(number.number)} // Passa 'number'
+                key={number.number}
+                onClick={() => handleNumberClick(number.number)}
                 disabled={!number.isAvailable}
                 className={`
                   relative p-2 rounded-lg text-center transition-all duration-200
@@ -188,7 +188,7 @@ function App() {
                   }
                 `}
               >
-                {number.number} {/* Exibe 'number' */}
+                {number.number}
                 {!number.isAvailable && number.purchasedBy && (
                   <span className="absolute inset-0 flex flex-col items-center justify-center bg-gray-800 bg-opacity-75 rounded-lg text-white text-[10px] leading-tight p-1">
                     <span className="font-medium">{number.purchasedBy}</span>
