@@ -6,7 +6,6 @@
   "type": "module",
   "main": "api/numbers.ts",
   "scripts": {
-    "postinstall": "chmod +x node_modules/.bin/tsc",
     "build": "vite build && tsc",
     "dev": "vite",
     "dev:server": "tsx watch server.ts",

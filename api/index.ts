@@ -1,3 +1,4 @@
+// api/index.ts
 import express from 'express';
 import cors from 'cors';
 import mongoose from 'mongoose';
@@ -12,7 +13,8 @@ app.use(cors());
 app.use(express.json());
 
 // MongoDB Connection
-const MONGODB_URI = process.env.MONGODB_URI || 'mongodb+srv://carlos98costa:1234567890@cluster0.mongodb.net/sistema_rifa?retryWrites=true&w=majority';
+// Nova MONGODB_URI fornecida pelo usuário
+const MONGODB_URI = process.env.MONGODB_URI || 'mongodb+srv://carlos98costa:itGlxjpnxNKXMlPB@cluster0.qmyvwor.mongodb.net/test?retryWrites=true&w=majority&appName=Cluster0';
 
 // Connect to MongoDB with retry logic
 async function connectDB() {
@@ -39,7 +41,7 @@ async function connectDB() {
           autoCreate: true
         });
 
-        console.log('MongoDB connected successfully to sistema_rifa database');
+        console.log('MongoDB connected successfully to database:', mongoose.connection.db?.databaseName);
         return;
       }
       return;
@@ -76,4 +78,4 @@ app.get('/api/health', (_req, res) => {
   });
 });
 
-export default app; 
+export default app;

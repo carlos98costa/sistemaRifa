@@ -1,12 +1,14 @@
+// src/services/api.ts
 const API_URL = import.meta.env.PROD 
   ? '/api/numbers'  // Em produção, usa o caminho relativo
   : 'http://localhost:3001/api/numbers'  // Em desenvolvimento, usa localhost
 
 export interface RaffleNumber {
-  number: number
+  number: number // Revertido de 'id' para 'number'
   isAvailable: boolean
   purchasedBy: string | null
   purchaseDate: Date | null
+  _id?: string // Opcional: Adiciona o _id do MongoDB, se precisar
 }
 
 export const api = {
@@ -57,4 +59,4 @@ export const api = {
       return false
     }
   }
-} 
+}
